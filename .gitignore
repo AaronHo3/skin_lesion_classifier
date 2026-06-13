@@ -1,0 +1,26 @@
+# Virtual environment (machine-specific) — rebuild with `uv sync`
+.venv/
+
+# Dataset — thousands of images, never committed
+data/
+*.zip
+*.csv
+*.tab
+
+# Model checkpoints (regenerable)
+checkpoints/
+*.pt
+*.pth
+
+# Python caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
