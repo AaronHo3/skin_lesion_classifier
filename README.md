@@ -1,4 +1,4 @@
-# 01 — Skin Lesion Classifier (Dermatology / ISIC)
+# Skin Lesion Classifier (Dermatology / ISIC)
 
 **Goal:** an end-to-end, shippable classifier that distinguishes skin lesion types
 (e.g. benign vs malignant / melanoma) on real high-resolution dermatology images.
