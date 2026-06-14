@@ -70,6 +70,18 @@ explainable — and so the thinking transfers to future projects.
   - Image counts drift slightly from 70/15/15 because multi-image lesions cluster — expected.
 - **Status:** verified  → output `data/splits.csv` (`split` column: train/val/test)
 
+### F2.2 — Dataset & transforms (preprocessing decisions)
+- **Decisions:**
+  - **Fixed class ordering** (`akiec,bcc,bkl,df,mel,nv,vasc` → 0..6) so label indices never
+    silently change between runs.
+  - **ImageNet normalization** (mean/std) so inputs match the pretrained backbone's (M3)
+    training distribution.
+  - **Augmentation on train only** (RandomResizedCrop, H+V flips, ±20° rotation, mild color
+    jitter). Vertical flip is valid because dermatoscopic lesions have no canonical orientation.
+- **Verification:** train sample → tensor `(3,224,224)` float32, value range ≈ `[-1.9, 2.6]`
+  (confirms normalization), label maps correctly. Split sizes match F2.1.
+- **Status:** implemented  → `src/dataset.py`
+
 ---
 
 ## Transferable principles (the "think like a researcher" list)
