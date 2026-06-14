@@ -113,8 +113,43 @@ explainable — and so the thinking transfers to future projects.
      "always predict nv" strategy, trading majority-class accuracy for minority recall.
      → Confirms accuracy is the wrong headline metric; need per-class recall (M5) to verify
      melanoma is actually being caught.
-- **Status:** smoke-test verified; full multi-epoch run pending (local ~35min or cloud GPU).
+- **Status:** smoke-test verified.
 - **To test later:** weighted vs unweighted loss (does accuracy rise but minority recall fall?).
+
+### F4.2 — Full 20-epoch run (local MPS, seed 42)
+- **Result:** best epoch **18** (val macro-AUC 0.9682). **TEST macro-AUC 0.9609**,
+  accuracy 0.820, loss 0.779. Checkpoint: `checkpoints/efficientnet_b0_best.pt` (16 MB).
+- **Why it matters:**
+  - macro-AUC 0.961 is competitive with published HAM10000 baselines.
+  - **val→test gap only 0.007** → strong evidence the lesion-level split (F2.1) prevented
+    leakage; the test estimate is trustworthy.
+  - Curve shows mild overfitting (train_loss≪val_loss late) but AUC-checkpointing kept the
+    best (epoch 18) model, not the overfit final one.
+- **Status:** verified. Headline number is AUC; per-class clinical audit still needed (M5).
+
+---
+
+## Milestone 5 — Clinical evaluation
+
+### F5.1 — High AUC hides inadequate melanoma sensitivity (operating-point problem)
+- **Finding (test set, best ckpt):**
+  - Per-class AUC strong everywhere (mel 0.921, others 0.94–0.99).
+  - **But melanoma recall at default argmax = 0.601** — 40% of melanomas missed; **27%
+    misclassified as `nv` (benign mole)**.
+  - Malignant-vs-benign: sensitivity 0.750, specificity 0.911, **74 missed malignancies**.
+  - `nv` recall 0.911 (easy majority). Minority classes absorbed into similar larger ones.
+- **Why it matters:** macro-AUC 0.96 looked clinically excellent but is misleading at the
+  decision level. The model *ranks* melanoma well (AUC 0.92) yet *decides* poorly at the
+  default threshold — a classic ranking-vs-operating-point gap. Missing melanoma is the
+  highest-cost error, so this is a safety blocker, not a tuning nicety.
+- **Decision / next:** Don't retrain blindly — **tune the decision threshold** to lift
+  melanoma/malignant sensitivity (accepting lower specificity), using an ROC analysis on
+  the val set; also check **probability calibration**. *(M5 chunk 2)*
+- **Status:** finding recorded; remediation pending.
+
+### Transferable principle added
+5. **A great aggregate metric can hide a fatal per-slice failure.** Always disaggregate
+   (per-class, per-subgroup) and evaluate at the *decision* threshold, framed by real costs.
 
 ---
 
