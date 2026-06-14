@@ -100,6 +100,24 @@ explainable — and so the thinking transfers to future projects.
 
 ---
 
+## Milestone 4 — Training
+
+### F4.1 — Pipeline runs; weighted-loss trade-off visible (1-epoch smoke test)
+- **Setup:** EfficientNet-B0 full fine-tune, class-weighted CrossEntropyLoss (F1.1),
+  AdamW lr 3e-4, macro-AUC checkpoint metric, seed 42. 1 epoch on MacBook MPS (~105s).
+- **Finding:** After **1 epoch**, val macro-AUC **0.930**, test macro-AUC **0.925**, but test
+  accuracy only **0.621**.
+- **Why it matters:**
+  1. High AUC after one epoch = transfer learning doing the heavy lifting (pretrained features).
+  2. Low accuracy is *expected and intended*: the weighted loss pushes the model off the
+     "always predict nv" strategy, trading majority-class accuracy for minority recall.
+     → Confirms accuracy is the wrong headline metric; need per-class recall (M5) to verify
+     melanoma is actually being caught.
+- **Status:** smoke-test verified; full multi-epoch run pending (local ~35min or cloud GPU).
+- **To test later:** weighted vs unweighted loss (does accuracy rise but minority recall fall?).
+
+---
+
 ## Transferable principles (the "think like a researcher" list)
 
 Generalizable lessons, accumulated as we go — these apply far beyond this project:
