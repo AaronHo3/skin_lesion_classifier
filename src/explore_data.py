@@ -4,7 +4,7 @@ Run: uv run python src/explore_data.py
 
 Prints the class distribution and lesion-level statistics to the terminal, and
 saves two figures to plots/: the class distribution and one sample image per class.
-EDA is the step where you *look* at your data before modeling — it surfaces problems
+EDA is the step where you *look* at your data before modeling t surfaces problems
 (here: severe class imbalance and duplicate images per lesion) that dictate every
 later design decision.
 """

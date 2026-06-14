@@ -56,6 +56,22 @@ explainable — and so the thinking transfers to future projects.
 
 ---
 
+## Milestone 2 — Data pipeline
+
+### F2.1 — Leakage-free, stratified split implemented & verified
+- **Finding/Decision:** Implemented the split from F1.1+F1.2. Key move: since every image
+  of a lesion shares one diagnosis, a lesion is *atomic* w.r.t. the label — so we collapse
+  images→lesions, do an ordinary **stratified** split on lesions, then map back to images.
+  This reduces a hard grouped+stratified problem to a simple one.
+- **Verification (seed 42):**
+  - **0 lesions** cross split boundaries (asserted in code) → no leakage.
+  - Sizes: train 7054 / val 1464 / test 1497 images (~70/15/15).
+  - Class proportions ~identical across splits (e.g. `nv` ~67%, `mel` ~11%, `df` ~1.1–1.5%).
+  - Image counts drift slightly from 70/15/15 because multi-image lesions cluster — expected.
+- **Status:** verified  → output `data/splits.csv` (`split` column: train/val/test)
+
+---
+
 ## Transferable principles (the "think like a researcher" list)
 
 Generalizable lessons, accumulated as we go — these apply far beyond this project:
