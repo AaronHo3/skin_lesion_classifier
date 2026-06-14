@@ -84,6 +84,22 @@ explainable — and so the thinking transfers to future projects.
 
 ---
 
+## Milestone 3 — Model
+
+### F3.1 — EfficientNet-B0 via transfer learning
+- **Decision:** Use `timm` to load **EfficientNet-B0 pretrained on ImageNet**, swap its
+  1000-class head for a fresh `Linear(1280 → 7)`. Default to **full fine-tuning** (all 4.0M
+  params trainable), since ~7k training images is enough to adapt the backbone; expose a
+  `freeze_backbone` flag to compare feature-extraction later.
+- **Why:** Lesion images resemble natural images (F1.3), so ImageNet features transfer well.
+  B0 is small/fast (good accuracy-per-compute) — a sensible first backbone before scaling up.
+- **Verification:** forward pass `(4,3,224,224) → (4,7)`; total/trainable params = 4,016,515.
+  Model outputs raw logits (softmax handled by the loss).
+- **Status:** implemented  → `src/model.py`
+- **To test later:** freeze vs fine-tune; B0 vs larger (B3) vs ResNet50. *(experiments)*
+
+---
+
 ## Transferable principles (the "think like a researcher" list)
 
 Generalizable lessons, accumulated as we go — these apply far beyond this project:
